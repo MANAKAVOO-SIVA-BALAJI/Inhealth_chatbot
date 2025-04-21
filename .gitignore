@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+practise.py
+output_data.json
+tests/
 # Distribution / packaging
 .Python
 build/

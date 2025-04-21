@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+openai
+langgraph
+langchain>=0.2.0
+langchain-community>=0.0.5
+python-dotenv
+gql
+requests
+pydantic
+gql
+
+

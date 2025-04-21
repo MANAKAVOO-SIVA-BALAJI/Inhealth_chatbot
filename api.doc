@@ -1,0 +1,51 @@
+
+
+run a project : uvicorn api.main:app --reload
+
+tables and columns
+ bloodorderview {
+    age
+    blood_bank_name
+    blood_group
+    companyid
+    creation_date_and_time
+    delivery_date_and_time
+    last_name
+    first_name
+    patient_id
+    order_line_items
+    reason
+    request_id
+    status
+  }
+  costandbillingview {
+    blood_component
+    company_id
+    company_name
+    month_year
+    overall_blood_unit
+    total_cost
+    total_patient
+  }
+
+request : GET
+endpoint : "/"
+response: {"message": "Connected to Blood Bank Chatbot API!"}
+
+request : POST
+endpoint : "/chat"
+response: {
+    "reply":{ "response": "I'm sorry, but the information about hospitals is unavailable.",
+            "suggested_actions": []
+            },
+            
+    "debug": {
+        "intent": "others",
+        "query": "",
+        "raw_result": "",
+        "summary": { "response": "I'm sorry, but the information about hospitals is unavailable.",
+            "suggested_actions": []
+            }
+    }
+}
+

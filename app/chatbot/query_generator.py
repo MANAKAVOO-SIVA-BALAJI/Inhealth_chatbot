@@ -92,7 +92,7 @@ prompt_template = ChatPromptTemplate.from_messages([
     ("user", "Intent: {intent}\nUser message: {message}\n\nGenerate a GraphQL query for this."),
 ])
 
-def generate_query(intent: str, message: str):
+def generate_query(intent: str="", message: str=""):
     
     prompt = prompt_template.format_messages(current_time=current_time,intent=intent, message=message)
     response = llm.invoke(prompt)

@@ -1,6 +1,8 @@
 
 
-run a project : uvicorn api.main:app --reload
+Run a project : uvicorn api.main:app --reload
+
+request header must contains api_key [X-API-KEY]
 
 tables and columns
  bloodorderview {
@@ -28,24 +30,20 @@ tables and columns
     total_patient
   }
 
+
 request : GET
 endpoint : "/"
 response: {"message": "Connected to Blood Bank Chatbot API!"}
 
 request : POST
 endpoint : "/chat"
-response: {
-    "reply":{ "response": "I'm sorry, but the information about hospitals is unavailable.",
-            "suggested_actions": []
-            },
-            
-    "debug": {
-        "intent": "others",
-        "query": "",
-        "raw_result": "",
-        "summary": { "response": "I'm sorry, but the information about hospitals is unavailable.",
-            "suggested_actions": []
-            }
-    }
+response:  {
+    "response": "There are currently 3 pending orders.",
+    "suggested_actions": [
+        "View pending (PA) orders",
+        "Count orders by blood bank"
+    ],
+    "error": null,
+    "error_type": null
 }
 

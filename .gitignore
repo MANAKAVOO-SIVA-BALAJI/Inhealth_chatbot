@@ -2,10 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+__init__.py
 # C extensions
 *.so
-
+api.doc
 practise.py
 output_data.json
 tests/

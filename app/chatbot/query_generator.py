@@ -1,4 +1,4 @@
-# query_generator.py
+# app/chatbot/query_generator.py
 
 from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate

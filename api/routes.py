@@ -133,3 +133,4 @@ async def chat_handler(request: ChatRequest):
             error="Invalid response format",
             error_type="FormatError"
         )
+    

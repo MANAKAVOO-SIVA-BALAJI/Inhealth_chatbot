@@ -115,7 +115,6 @@ json
 
 
 
-
 # intent_query_prompt = """
 # You are an intelligent assistant that classifies user messages into intents and generates valid GraphQL queries using schema information and strict role-based access control.
 

@@ -15,6 +15,21 @@ class GraphQLExecutionError(ChatbotException):
     """Failed to execute GraphQL query"""
     pass
 
+class ResponseParsingError(ChatbotException):
+    """Failed to parse LLM response"""
+    pass
+
+class DataRetrievalError(ChatbotException):
+    """Failed to retrieve data from the database"""
+    pass
+class DataStorageError(ChatbotException):
+    """Failed to store data in the database"""
+    pass
+
+class RateLimitingError(ChatbotException):  
+    """Rate limit exceeded"""
+    pass
+
 class SummarizerError(ChatbotException):
     """Failed to summarize results"""
     pass

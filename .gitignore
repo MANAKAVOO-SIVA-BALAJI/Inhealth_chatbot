@@ -28,6 +28,12 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+locustfile.py
+project_setup.py
+intent_classifier.py
+query_generator.py
+schema_validator.py
+dependencies.py
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

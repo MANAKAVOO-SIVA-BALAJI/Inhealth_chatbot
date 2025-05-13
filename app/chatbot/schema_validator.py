@@ -40,8 +40,6 @@ def field_exists(schema, type_name, field_name):
     return False
 
 
-
-
 def validate_query_fields(query, schema):
     for field in query["fields"]:
         if not field_exists(schema, query["type"], field["name"]):

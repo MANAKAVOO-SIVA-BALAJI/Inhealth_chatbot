@@ -10,7 +10,24 @@ import structlog
 logger = structlog.get_logger()
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware):
+    """
+    Middleware for logging requests and responses with unique request IDs.
+    """
+
     async def dispatch(self, request: Request, call_next):
+        """
+        Processes incoming requests, logs details, and adds a unique request ID.
+
+        Args:
+            request (Request): The incoming request object.
+            call_next: The next middleware or route handler.
+
+        Returns:
+            Response: The response object after processing the request.
+
+        Raises:
+            Exception: If an error occurs during request processing.
+        """
         request_id = str(uuid.uuid4())
         request.state.request_id = request_id
         

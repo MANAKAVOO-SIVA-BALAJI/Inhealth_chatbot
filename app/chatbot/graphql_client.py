@@ -39,7 +39,7 @@ class GraphQLClient:
         # print(f"requests logger level: {logging.getLogger('requests').getEffectiveLevel()}")
         # print(f"urllib3 logger level: {logging.getLogger('urllib3').getEffectiveLevel()}")
 
-        logger.info("GraphQL cache miss, executing query")
+        logger.info("GraphQL executing query.....", query=query, variables=variables)
         try:
             gql_query = gql(query)
             # print("gql query: ",gql_query)
@@ -49,10 +49,9 @@ class GraphQLClient:
             # cache.set(cache_key, result)  # This was backwards: cache.set(result, cache_key)
             return result
         except Exception as e:
-            logger.error(f"GraphQL query error: {str(e)}", exc_info=True)
+            logger.error(f"GraphQL query error: {str(e)}", exc_info=False)
             raise
 
-# Backward compatibility
 def run_graphql_query(query: str, variables: dict = None):
     logger.info("Running GraphQL query")
     try:
@@ -61,8 +60,9 @@ def run_graphql_query(query: str, variables: dict = None):
             admin_secret=settings.HASURA_ADMIN_SECRET,
             role=settings.HASURA_ROLE
         )
-        result = client.run_query(query, variables)  # Store the result in a variable
-        return result                                # Only return once
+        result = client.run_query(query, variables)  
+        return result                               
     except Exception as e:
-        logger.error(f"GraphQL query error: {str(e)}", exc_info=True)
+        logger.error(f"GraphQL query error: {str(e)}", exc_info=False)
         raise
+

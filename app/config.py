@@ -1,15 +1,3 @@
-# # # config.py
-
-# # import os
-# # from dotenv import load_dotenv
-
-# # load_dotenv()
-
-# # OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-# # HASURA_ADMIN_SECRET = os.getenv("HASURA_ADMIN_SECRET")
-# # HASURA_GRAPHQL_URL = os.getenv("HASURA_GRAPHQL_URL")
-# # HASURA_ROLE= os.getenv("HASURA_ROLE")
-
 # app/config.py
 import os
 from typing import List, Optional
@@ -40,7 +28,8 @@ class Settings(BaseSettings):
     HASURA_ROLE: str = Field("admin", env="HASURA_ROLE")
     
     # App settings
-    APP_DEBUG: bool = Field(True, env="APP_DEBUG")
+    # APP_DEBUG: bool = Field("False", env="APP_DEBUG")
+    APP_DEBUG: bool = Field(False, env="APP_DEBUG")
     LOG_LEVEL: str = Field("INFO", env="LOG_LEVEL")
 
     # Rate limiting
@@ -58,11 +47,17 @@ class Settings(BaseSettings):
 
 # Create settings instance
 settings = Settings()
-# print("Allowed Origins:", settings.dict())
-# print("APP_Debug:", settings.APP_DEBUG)
+# print("Allowed Origins:", settings.model_dump())
+print("APP_Debug:", settings.APP_DEBUG)
 OPENAI_API_KEY = settings.OPENAI_API_KEY
 HASURA_ADMIN_SECRET = settings.HASURA_ADMIN_SECRET
 HASURA_GRAPHQL_URL = settings.HASURA_GRAPHQL_URL
 HASURA_ROLE = settings.HASURA_ROLE
 API_KEY = settings.API_KEY
 API_KEY_NAME = settings.API_KEY_NAME
+APP_DEBUG = settings.APP_DEBUG
+LOG_LEVEL = settings.LOG_LEVEL
+RATE_LIMIT_PER_MINUTE = settings.RATE_LIMIT_PER_MINUTE
+ALLOWED_ORIGINS = settings.ALLOWED_ORIGINS
+OPENAI_MODEL = settings.OPENAI_MODEL
+

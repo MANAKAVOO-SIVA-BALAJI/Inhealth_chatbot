@@ -35,7 +35,8 @@ intent_classifier.py
 query_generator.py
 schema_validator.py
 dependencies.py
-
+requirements1.txt
+requirements3.txt
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.

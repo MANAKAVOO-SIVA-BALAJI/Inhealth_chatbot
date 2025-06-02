@@ -95,8 +95,8 @@ def keyword_match(user_question):
     
     best_query_type = max(scores.items(), key=lambda x: x[1])[0]
     
-    # if scores[best_query_type] < 1:
-    #     best_query_type = "others"
+    if scores[best_query_type] < 1:
+        best_query_type = "others"
     
     with open("queries.json", "r", encoding="utf-8") as file:
         data = json.load(file)

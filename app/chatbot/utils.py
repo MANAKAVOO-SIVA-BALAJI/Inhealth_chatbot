@@ -2,9 +2,33 @@ import json
 import os
 from datetime import datetime
 import logging
-
+from typing import List, Optional
 import structlog
 logger = structlog.get_logger()
+
+def format_chat_history(messages: List[dict], columns: Optional[List[str]] = None) -> str:
+    if not messages:
+        return "No chat history found."
+    
+    formatted = []
+    for idx, msg in enumerate(messages, 1):
+        # If no columns specified, format all keys in message
+        keys_to_format = columns if columns else list(msg.keys())
+        
+        # Filter out keys not present or with empty values
+        keys_to_format = [k for k in keys_to_format if k in msg and msg[k] not in [None, ""]]
+        
+        if not keys_to_format:
+            continue
+        
+        lines = [f"{idx}."]
+        for key in keys_to_format:
+            lines.append(f"- **{key.capitalize()}:** {msg[key]}")
+        
+        formatted.append("\n".join(lines))
+    
+    return "\n\n".join(formatted) if formatted else "No matching data found."
+
 
 def store_data(updates, file_path="output_data.json", max_records=1000):
     try:
@@ -25,4 +49,4 @@ def store_data(updates, file_path="output_data.json", max_records=1000):
         with open(file_path, "w") as file:
             json.dump(data, file, indent=4)
     except Exception as e:
-        logging.error(f"Error storing data: {str(e)}", exc_info=True)
+        logging.error(f"Error storing data: {str(e)}", exc_info=False)

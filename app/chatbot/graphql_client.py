@@ -3,7 +3,7 @@
 from gql import Client, gql
 from gql.transport.requests import RequestsHTTPTransport
 from app.config import settings
-from app.cache import cache
+# from app.cache import cache
 import structlog
 
 logger = structlog.get_logger()
@@ -16,7 +16,9 @@ class GraphQLClient:
             headers={
                 "Content-Type": "application/json",
                 "x-hasura-admin-secret": admin_secret,
-                "x-hasura-role": role
+                "x-hasura-role": role,
+                "X-Hasura-Company-Id":"CMP-RRPZYICLEG",
+                "x-hasura-user-id":"USR-IHI6SJSYB0"
             },
             verify=True,
             retries=2,
@@ -25,7 +27,7 @@ class GraphQLClient:
     
     def run_query(self, query, variables=None):
         # Try to get from cache first
-        cache_key = f"{query}_{str(variables)}"
+        # cache_key = f"{query}_{str(variables)}"
         # cached_result = cache.get(cache_key)
         
         # if cached_result:
@@ -39,7 +41,7 @@ class GraphQLClient:
         # print(f"requests logger level: {logging.getLogger('requests').getEffectiveLevel()}")
         # print(f"urllib3 logger level: {logging.getLogger('urllib3').getEffectiveLevel()}")
 
-        logger.info("GraphQL executing query.....", query=query, variables=variables)
+        logger.debug("GraphQL executing query.....", query=query, variables=variables)
         try:
             gql_query = gql(query)
             # print("gql query: ",gql_query)
@@ -51,9 +53,31 @@ class GraphQLClient:
         except Exception as e:
             logger.error(f"GraphQL query error: {str(e)}", exc_info=False)
             raise
+    
+    def run_mutation(self, mutation, variables=None):
+        # Try to get from cache first
+        # cache_key = f"{mutation}_{str(variables)}"
+        # cached_result = cache.get(cache_key)
+        
+        # if cached_result:
+        #     logger.info("GraphQL cache hit")
+        #     return cached_result
+        
+        # Cache miss, execute mutation
+        logger.debug("GraphQL executing mutation.....", mutation=mutation, variables=variables)
+        try:
+            gql_mutation = gql(mutation)
+            result = self.client.execute(gql_mutation, variable_values=variables or {})
+            
+            # Cache the result
+            # cache.set(cache_key, result)  # This was backwards: cache.set(result, cache_key)
+            return result
+        except Exception as e:
+            logger.error(f"GraphQL mutation error: {str(e)}", exc_info=False)
+            raise
 
 def run_graphql_query(query: str, variables: dict = None):
-    logger.info("Running GraphQL query")
+    logger.debug("Running GraphQL query")
     try:
         client = GraphQLClient(
             url=settings.HASURA_GRAPHQL_URL,
@@ -64,5 +88,19 @@ def run_graphql_query(query: str, variables: dict = None):
         return result                               
     except Exception as e:
         logger.error(f"GraphQL query error: {str(e)}", exc_info=False)
+        raise
+
+def run_graphql_mutation(mutation: str, variables: dict = None):
+    logger.debug("Running GraphQL mutation")
+    try:
+        client = GraphQLClient(
+            url=settings.HASURA_GRAPHQL_URL,
+            admin_secret=settings.HASURA_ADMIN_SECRET,
+            role=settings.HASURA_ROLE
+        )
+        result = client.run_mutation(mutation, variables)  
+        return result                               
+    except Exception as e:
+        logger.error(f"GraphQL mutation error: {str(e)}", exc_info=False)
         raise
 

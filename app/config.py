@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     # App settings
     # APP_DEBUG: bool = Field("False", env="APP_DEBUG")
     APP_DEBUG: bool = Field(False, env="APP_DEBUG")
-    LOG_LEVEL: str = Field("INFO", env="LOG_LEVEL")
+    LOG_LEVEL: str = Field("DEBUG", env="LOG_LEVEL")
 
     # Rate limiting
     RATE_LIMIT_PER_MINUTE: int = Field(60, env="RATE_LIMIT_PER_MINUTE")
@@ -47,8 +47,10 @@ class Settings(BaseSettings):
 
 # Create settings instance
 settings = Settings()
-# print("Allowed Origins:", settings.model_dump())
+print("Allowed Origins:", settings.model_dump())
 print("APP_Debug:", settings.APP_DEBUG)
+print("Log Level:", settings.LOG_LEVEL)
+
 OPENAI_API_KEY = settings.OPENAI_API_KEY
 HASURA_ADMIN_SECRET = settings.HASURA_ADMIN_SECRET
 HASURA_GRAPHQL_URL = settings.HASURA_GRAPHQL_URL

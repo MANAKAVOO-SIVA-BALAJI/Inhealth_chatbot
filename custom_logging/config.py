@@ -6,13 +6,14 @@ import structlog
 from app.config import settings
 
 def configure_logging():
-    # Set up shared processors
+
     shared_processors = [
-        structlog.processors.add_log_level,
-        structlog.stdlib.add_logger_name,
-        structlog.processors.TimeStamper(fmt="iso"),
-        structlog.processors.StackInfoRenderer(),
-        structlog.processors.format_exc_info,
+    structlog.threadlocal.merge_threadlocal,
+    structlog.processors.add_log_level,
+    structlog.stdlib.add_logger_name,
+    structlog.processors.TimeStamper(fmt="iso"),
+    structlog.processors.StackInfoRenderer(),
+    structlog.processors.format_exc_info,
     ]
     
     # Determine log format based on debug setting
@@ -28,7 +29,8 @@ def configure_logging():
         
         structlog.configure(
             processors=processors,
-            context_class=dict,
+            # context_class=dict,
+            context_class=structlog.threadlocal.wrap_dict(dict),
             logger_factory=structlog.stdlib.LoggerFactory(),
             wrapper_class=structlog.stdlib.BoundLogger,
             cache_logger_on_first_use=True,
@@ -42,7 +44,10 @@ def configure_logging():
         handler.setFormatter(formatter)
         
         root_logger = logging.getLogger()
-        root_logger.handlers = [handler]  # Replace existing handlers
+        if settings.APP_DEBUG==True:
+            root_logger.handlers = [handler]
+        # if not root_logger.handlers:
+        #     root_logger.addHandler(handler)
         root_logger.setLevel(getattr(logging, log_level, logging.INFO))
         
     else:
@@ -54,7 +59,8 @@ def configure_logging():
         
         structlog.configure(
             processors=processors,
-            context_class=dict,
+            # context_class=dict,
+            context_class=structlog.threadlocal.wrap_dict(dict),
             logger_factory=structlog.stdlib.LoggerFactory(),
             wrapper_class=structlog.stdlib.BoundLogger,
             cache_logger_on_first_use=True,
@@ -64,11 +70,12 @@ def configure_logging():
         handler.setFormatter(logging.Formatter("%(message)s"))
         
         root_logger = logging.getLogger()
-        root_logger.handlers = [handler]  # Replace existing handlers
-        root_logger.setLevel(getattr(logging, log_level, logging.INFO))
-        
-        # Suppress verbose logs from GraphQL libraries and HTTP requests
- # Set log levels for `gql` and related libraries
+        if settings.APP_DEBUG==True:
+            root_logger.handlers = [handler]
+        # if not root_logger.handlers:
+        #     root_logger.addHandler(handler)
+        root_logger.setLevel(getattr(logging, log_level, logging.INFO))  
+
     logging.getLogger('gql').setLevel(logging.CRITICAL)  # Suppress gql logs
     logging.getLogger('gql.transport.requests').setLevel(logging.CRITICAL)  # Suppress gql transport logs
     logging.getLogger('requests').setLevel(logging.CRITICAL)  # Suppress requests logs

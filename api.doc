@@ -171,4 +171,29 @@ queries
       }
     }
 
-  
+
+For env changes , we need to start the docker 
+
+Stop the running container (to avoid conflicts):
+docker stop bdd93f651d70c279227ee1eba968cba665356b53ab8f5cbfa9898ab931ef3e59 #container_id
+
+Then restart it with the updated env file:
+docker run -d -p 8000:8000 --env-file .env my-fastapi-app
+
+
+
+if changed app code (e.g., main.py or other files)
+
+we need to rebuild the Docker image:
+docker build -t my-fastapi-app .
+
+Then stop and remove the old container:
+docker stop <container_id>
+docker rm <container_id>
+
+And run a new container with the updated image:
+docker run -d -p 8000:8000 --env-file .env my-fastapi-app
+
+
+Redis setup
+docker run -d -p 6379:6379 --name redis-server redis

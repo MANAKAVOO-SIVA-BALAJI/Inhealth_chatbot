@@ -61,11 +61,11 @@
   },
   "Bye": {
     "description": "End the conversation.",
-    "query": "Thank you , let me know if there is anything else I can help you with."
+    "query": ""
   },
   "greetings": {
     "description": "Greet the user.",
-    "query": "{ \"Hello! How can I help you today?\" }"
+    "query": ""
   },
   "others": {
     "description": "Handles unknown queries.",

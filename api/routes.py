@@ -19,11 +19,19 @@ from langchain_community.vectorstores import FAISS
 from app.dependencies import get_llm
 from app.chatbot.memory_operations import ChatMemory
 from app.cache import cache
+from app.faqs.faqs_rag import ensure_embedding_model , main
+import os
 logger = structlog.get_logger()
 router = APIRouter()
 
 memory = ChatMemory()
 
+if not os.path.exists("./models/bge-base-en-v1.5"):
+    logger.info("Local embedding model not found, please download the model to ./models/bge-base-en-v1.5")
+    ensure_embedding_model("./models/bge-base-en-v1.5")
+if not os.path.exists("./faiss_index"):
+    logger.info("FAISS index not found, please create the FAISS index first")
+    main()  
 embedding = HuggingFaceEmbeddings(
     model_name="./models/bge-base-en-v1.5",
     model_kwargs={"device": "cpu"},  
@@ -151,12 +159,13 @@ async def query_faq(request: FaqRequest):
     question = request.message.strip()
     if not question:
         raise HTTPException(status_code=400, detail="Query cannot be empty.")
-    cache_key = f"faq_{question}"
+    cache_key = f"{question}"
     cached_result = cache.get(cache_key)
-    
+    logger.debug(f"Cache key: {cache_key}")
+    logger.debug(f"Cached result: {cached_result}")
     if cached_result:
         logger.info("Faqs cache hit")
-        return FaqResponse(answers=cached_result, suggested_actions=[])
+        return FaqResponse(response=cached_result, suggested_actions=[])
 
     results = retriever.invoke(question)
     answers = [doc.page_content for doc in results] 
@@ -207,6 +216,7 @@ async def query_faq(request: FaqRequest):
     ])
     
     logger.debug("Retrived Context: ",answers)
-    cache.set(cache_key, response.content) 
+    cache.set(cache_key, response.content)
+    print("Cache:",cache.cache)
     return FaqResponse(response=response.content,suggested_actions=[])
 

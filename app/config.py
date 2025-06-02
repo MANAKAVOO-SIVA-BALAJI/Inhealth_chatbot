@@ -41,7 +41,7 @@ class Settings(BaseSettings):
         return self.ALLOWED_ORIGINS.split(',')
     
     class Config:
-        env_file = ".env"
+        env_file = "dev.env"
         case_sensitive = True
         extra = "allow" 
 

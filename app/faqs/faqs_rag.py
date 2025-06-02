@@ -69,15 +69,15 @@ def save_faiss_index(vectorstore, path):
     vectorstore.save_local(path)
     print("Index saved successfully.")
 
-if __name__ == "__main__":
+def main():
     json_files = load_faq_files(FAQ_JSON_PATH)
     print("Parsing FAQ data...")
     docs = parse_faq_data(json_files)
     ensure_embedding_model(MODEL_LOCAL_PATH)
     vectorstore = create_faiss_index(docs, MODEL_LOCAL_PATH)
     save_faiss_index(vectorstore, FAISS_INDEX_PATH)
-
     print("All done!")
+
 
 
 

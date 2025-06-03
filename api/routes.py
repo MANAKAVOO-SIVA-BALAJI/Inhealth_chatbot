@@ -56,7 +56,7 @@ async def chat_handler(request: ChatRequest):
         history = memory.get_session_messages(request.session_id) #
           # Limit history length
         logger.debug(f"Chat history length: {len(history)}")
-        history = history
+        # history = history
         # If session_id is provided, use it to store the message
         mutation_query=chat_message_mutation
         mutation_query["variables"]["sessionid"] = request.session_id 
@@ -66,8 +66,8 @@ async def chat_handler(request: ChatRequest):
         
         mutation_query=chat_session_with_message_mutation
         mutation_query["variables"]["userid"] = request.user_id
-        logger.debug(f"Creating new chat session")
-        logger.debug(f"History length: {len(history)}")
+        logger.info(f"Creating new chat session")
+        # logger.debug(f"History length: {len(history)}")
 
     # return {"response": "testing response"}
     context = {"usermessage":request.message,"intent": "", "querygenerated": "", "raw_result": "", "airesponse": "" ,"history": history,"error": None}

@@ -13,7 +13,7 @@ class ChatMemory:
     def get_session_messages_hasura(self,session_id: str):
         # print("Fetching session messages from Hasura for session_id:", session_id)
         history = run_graphql_query(query=get_chat_session_messages["query"],variables={"session_id":session_id})
-        print("history(from Hasura): ",len(history))
+        # print("history(from Hasura): ",len(history))
         
         if "chatmessages" in history:
             self.memory_dict[session_id] = history["chatmessages"]

@@ -124,7 +124,7 @@ get_chat_session = {
 
 get_chat_session_messages = {
     "query":""" query MyQuery($session_id: String = "") {
-  chatmessages(where: {chatsession: {id: {_eq: $session_id}}}) {
+  chatmessages(where: {chatsession: {id: {_eq: $session_id}}}, limit: 10) {
       usermessage
       airesponse
       querygenerated

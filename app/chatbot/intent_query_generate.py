@@ -9,6 +9,7 @@ from datetime import datetime
 import json
 import re
 from app.chatbot.utils import format_chat_history
+# import app.chatbot.utils as get_current_datetime
 
 from pydantic import BaseModel
 
@@ -278,8 +279,8 @@ class IntentQueryProcessor:
             
             prompt = self.combined_prompt.format_messages(
                 message=message,
-                current_time=current_time,
                 chat_history=history,
+                current_time=current_time #get_current_datetime()#
             )
 
             # Get response from LLM
@@ -323,7 +324,8 @@ def process_message(message: str,history=[]) -> dict:
     print("query generate history length: ",len(history))
     print("history type : ",type(history))
     history = format_chat_history(history, columns=["usermessage", "airesponse", "intent", "querygenerated"])
-    print("history after format: ",history)
+    # print("history after format: ",history)
+    logger.debug("History message ", history=history[0]) 
     return processor.process(message, history=[history])
 
 

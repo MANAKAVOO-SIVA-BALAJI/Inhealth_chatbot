@@ -44,26 +44,27 @@ def chatbot_pipeline( context: dict = default_context):
             logger.error("Query generation failed", exc_info=False)
             
         # 1. Keyword matching [fallback]
-        if (
-            process_flow[0] == 0 or
-            not (context.get("querygenerated") or "").strip() or
-            context.get("intent") == "others"
-        ):
-            try:
-                intent , query = keyword_match(user_message)
-                if query is not None and intent != "others":
-                    context["querygenerated"] = query
-                    context["intent"] = intent
-                    logger.info("Keyword matching successful", intent=intent, query_length=len(query))
-                    process_flow[1] = 1
-                else:
-                    context["querygenerated"] = ""
-                    context["intent"] = "others"
-                    process_flow[1] = 0
-                    logger.info("Keyword matching failed", intent=intent)
+        # if (
+        #     process_flow[0] == 0 or
+        #     not (context.get("querygenerated") or "").strip() or
+        #     context.get("intent") == "others"
+        # ):
+        #     try:
+        #         intent , query = keyword_match(user_message)
+        #         if query is not None and intent != "others":
+        #             context["querygenerated"] = query
+        #             context["intent"] = intent
+        #             logger.info("Keyword matching successful", intent=intent, query_length=len(query))
+        #             process_flow[1] = 1
+        #         else:
+        #             context["querygenerated"] = ""
+        #             context["intent"] = "others"
+        #             process_flow[1] = 0
+        #             logger.info("Keyword matching failed", intent=intent)
 
-            except Exception as e:
-                logger.error("Keyword matching failed", exc_info=False)
+        #     except Exception as e:
+        #         logger.error("Keyword matching failed", exc_info=False)
+
 
         if context['intent'] in ["greetings","others","farewell",'history'] or  len(context['querygenerated']) <= 1:
             result = general_response(context['intent'],message=user_message, history=context["history"])

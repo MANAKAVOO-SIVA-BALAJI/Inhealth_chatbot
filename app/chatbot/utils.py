@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime
+import datetime
 import logging
 from typing import List, Optional
 import structlog
@@ -29,6 +29,9 @@ def format_chat_history(messages: List[dict], columns: Optional[List[str]] = Non
     
     return "\n\n".join(formatted) if formatted else "No matching data found."
 
+def get_current_datetime():
+    logger.debug("Fetching current date and time")
+    return datetime.datetime.now().strftime("Year: %Y, Month: %m, Day: %d, Time: %H:%M:%S")
 
 def store_data(updates, file_path="output_data.json", max_records=1000):
     try:
@@ -50,3 +53,5 @@ def store_data(updates, file_path="output_data.json", max_records=1000):
             json.dump(data, file, indent=4)
     except Exception as e:
         logging.error(f"Error storing data: {str(e)}", exc_info=False)
+
+# print(get_current_datetime())

@@ -95,7 +95,7 @@ app.add_middleware(
 
 app.include_router(
     router,
-    prefix="/api/v1",
+    prefix="/v1",
     dependencies=[Depends(verify_api_key)] if not settings.APP_DEBUG else []
 )
 
@@ -105,7 +105,7 @@ async def health_check():
         "status": "healthy",
         "timestamp": time.time(),
         "version": "1.0.0",
-        "environment": os.environ.get("ENVIRONMENT", "development")
+        "environment": os.environ.get("ENVIRONMENT", "Development")
     }
 
 class ErrorResponse(BaseModel):

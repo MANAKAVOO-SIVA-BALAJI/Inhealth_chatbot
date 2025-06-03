@@ -7,26 +7,12 @@ from app.config import OPENAI_API_KEY
 from datetime import datetime
 import json
 from app.chatbot.utils import format_chat_history
-# from api.routes import memory
+import structlog
+import app.chatbot.utils as get_current_datetime
+logger = structlog.get_logger()
 current_time = datetime.now().strftime("%Y-%m-%d %I:%M %p")
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, openai_api_key=OPENAI_API_KEY)
-
-# class ChatMemory:
-#     def __init__(self):
-#         self.memory_dict = {}
-#         self.session_ids = set()
-
-#     def get_session_messages(self, session_id: str):
-#         return self.memory_dict.get(session_id, [])
-
-#     def add_user_message(self, session_id: str, message: dict):
-#         if session_id not in self.memory_dict:
-#             self.memory_dict[session_id] = []
-#             self.session_ids.add(session_id)
-#         self.memory_dict[session_id].append(message)
-        
-# memory = ChatMemory()
 
 def response_parser(response: str) -> dict:
     try:
@@ -45,26 +31,20 @@ def response_parser(response: str) -> dict:
 def summarize_result(intent: str, message: str = None,
                      result: dict = None, history: list = None) -> dict:
     # print("summarize_result called")
-    # history = memory.get_session_messages(session_id)
-
-    # memory.add_user_message(session_id, {
-    #     "role": "user",
-    #     "message": message
-    # })
 
     prompt_template = ChatPromptTemplate.from_messages([
         ("system", summary_prompt),
-        ("user", """\nIntent: {intent}\nConversation History: {history}\nUser Question: {message}\nGraphQL Result: {result}""")
+        ("user", """\nIntent: {intent}\nConversation History: {history}\nUser Question: {message}\n Data Result: {result},\nCurrent time: {current_time}""")
     ])
 
     prompt = prompt_template.format(
         intent=intent,
-        history=json.dumps(history, indent=2),
+        history=format_chat_history(history, columns=["usermessage", "airesponse"]),
         message=message,
         result=result,
-        current_time=current_time
+        current_time= current_time #or get_current_datetime()
     )
-
+    # print("Summarize response prompt", prompt)
     response = llm.invoke(prompt)
     parsed = response_parser(response.content)
 
@@ -72,20 +52,19 @@ def summarize_result(intent: str, message: str = None,
 
 
 def general_response(intent: str, message: str , history: list = None) -> dict:
-    print("general_response called")
 
     prompt_template = ChatPromptTemplate.from_messages([
         ("system", general_prompt),
-        ("user", """\nConversation History: {history}\nUser Question: {message} \nIntent: {intent}""")
+        ("user", """\nConversation History: {history}\nUser Question: {message} \nIntent: {intent} \nCurrent time:{current_time} """)
     ])
 
     prompt = prompt_template.format(
         intent=intent,
         history=format_chat_history(history, columns=["usermessage", "airesponse"]),
         message=message,
-        current_time=current_time
+        current_time=current_time #get_current_datetime()
     )
-
+    # print("General response prompt", prompt)
     response = llm.invoke(prompt)
     parsed = response_parser(response.content)
 

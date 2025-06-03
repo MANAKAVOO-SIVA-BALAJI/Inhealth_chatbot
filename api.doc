@@ -59,10 +59,6 @@ Headers:
  Body : 
   {
     "response": "There are currently 3 pending orders.",
-    "suggested_actions": [
-        "View pending (PA) orders",
-        "Count orders by blood bank"
-    ],
     "error": null,
     "error_type": null
   }
